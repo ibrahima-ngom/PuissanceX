@@ -1,28 +1,41 @@
 package view;
 
-public class PuissanceXStageView {
-    // Affiche la grille complète à partir d'une matrice de pions
-    public void afficherGrille(int[][] grille) {
-        for (int i = 0; i < grille.length; i++) {
-            for (int j = 0; j < grille[i].length; j++) {
-                System.out.print(PuissanceXTokenLook.getLook(grille[i][j]) + " ");
-            }
-            System.out.println();
+import boardifier.model.GameStageModel;
+import boardifier.view.*;
+import model.*;
+
+/**
+ * Vue du stage pour le jeu Puissance X.
+ * Associe un look visuel à chaque élément du modèle.
+ */
+public class PuissanceXStageView extends GameStageView {
+
+    public PuissanceXStageView(String name, GameStageModel gameStageModel) {
+        super(name, gameStageModel);
+    }
+
+    @Override
+    public void createLooks() {
+        PuissanceXStageModel model = (PuissanceXStageModel) gameStageModel;
+
+        // Texte pour le nom du joueur
+        addLook(new TextLook(model.getPlayerName()));
+
+        // Plateau avec coordonnées, bordures, et cases de taille 2x4
+        addLook(new ClassicBoardLook(2, 4, model.getBoard(), 2, 4, true));
+
+        // Looks pour les deux pots de jetons
+        addLook(new TableLook(model.getRedPot(), 0, 1)); // 0 = profondeur, 1 = bordure
+        addLook(new TableLook(model.getYellowPot(), 0, 1));
+
+        // Look pour les jetons rouges
+        for (PuissanceXToken token : model.getRedTokens()) {
+            addLook(new PuissanceXTokenLook(token));
         }
-    }
 
-    // Affichage de  message de victoire
-    public void afficherMessageVictoire(int joueur) {
-        System.out.println("Victoire du joueur " + joueur + " !");
-    }
-
-    //  un message d'égalité
-    public void afficherMessageEgalite() {
-        System.out.println("Match nul !");
-    }
-
-    // Affichage d'un message générique
-    public void afficherMessage(String message) {
-        System.out.println(message);
+        // Look pour les jetons jaunes
+        for (PuissanceXToken token : model.getYellowTokens()) {
+            addLook(new PuissanceXTokenLook(token));
+        }
     }
 }
